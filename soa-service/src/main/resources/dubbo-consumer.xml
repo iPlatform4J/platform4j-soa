@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+    ">
+    <!--配置注册中心-->
+    <dubbo:registry id="platformConsumerRegistry" address="" protocol="zookeeper"
+                    group=""/>
+    <!--配置代理-->
+    <!--<dubbo:reference interface="com.platform4j.jobs.api.JobManager" id="jobManager" timeout="6000"-->
+    <!--registry="platformConsumerRegistry" check="false" />-->
+</beans>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="true">
+
+    <context:component-scan base-package="com.platform4j.soa.dao"/>
+
+    <bean id="parentdataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close" >
+
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+
+        <!-- 连接池最大使用连接数 -->
+        <property name="maxActive" value="100"/>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="1000"/>
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="defaultAutoCommit" value="true"/>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="10"/>
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="10"/>
+
+        <!-- 自动清除无用连接 -->
+        <property name="removeAbandoned">
+            <value>true</value>
+        </property>
+        <!-- 清除无用连接的等待时间 -->
+        <property name="removeAbandonedTimeout">
+            <value>180</value>
+        </property>
+        <!-- 连接属性 -->
+        <property name="connectionProperties">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+
+    <bean id="masterDataSource" parent="parentdataSource">
+        <property name="url" value=""/>
+        <property name="username" value=""/>
+        <property name="password" value=""/>
+    </bean>
+
+    <!-- 主库配置 -->
+    <bean id="sqlSessionFactoryMaster" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="masterDataSource"></property>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath*:sqlmaps/*.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.platform4j.soa.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryMaster" />
+    </bean>
+</beans>

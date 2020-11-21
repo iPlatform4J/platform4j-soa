@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+">
+    <aop:config>
+        <aop:advisor id="daoTimeLog" advice-ref="daoTimeAdvice"
+                     pointcut="execution(* com.platform4j.soa.dao.*Mapper.*(..))
+                            || execution(* com.platform4j.soa.dao.redis.*Mapper.*(..))"/>
+    </aop:config>
+    <bean id="daoTimeAdvice" class="com.platform4j.soa.dao.aop.daoAdvice"/>
+
+    <aop:config>
+        <aop:advisor id="remoteTimeLog" advice-ref="remoteTimeAdvice"
+                     pointcut="execution(* com.platform4j.soa.remote.*Remote.*(..))"/>
+    </aop:config>
+    <bean id="remoteTimeAdvice" class="com.platform4j.soa.remote.aop.RemoteTimeAdvice"/>
+
+</beans>

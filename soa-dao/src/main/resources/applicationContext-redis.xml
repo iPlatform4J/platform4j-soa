@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="false" default-autowire="byName">
+
+    <!-- redis -->
+    <bean id="redisObjectDao" class="com.platform4j.soa.dao.redis.impl.RedisObjectDaoImpl">
+        <property name="shardedJedisPool" ref="shardedJedisPoolCache" />
+    </bean>
+
+    <!-- POOL配置 -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="200" />
+        <property name="testOnBorrow" value="true" />
+    </bean>
+
+    <!-- jedis shard pool配置 -->
+    <bean id="shardedJedisPoolCache" class="com.platform4j.arch.redis.ShardedJedisSentinelPool">
+        <constructor-arg ref="jedisPoolConfig" index="0"/>
+        <constructor-arg type="java.lang.String" index="2" value="">
+            <!--这里配置redis哨兵，监控redis主实例的运行情况-->
+        </constructor-arg>
+
+        <constructor-arg type="java.lang.String" index="1" value="">
+            <!--这里配置主服务器的名称，该名称在redis哨兵中配置，主服务名称排序会影响redis key的映射-->
+        </constructor-arg>
+    </bean>
+
+    <bean id="redisClusterClient" class="io.lettuce.core.support.RedisClusterClientFactoryBean">
+        <property name="uri" value=""/>
+    </bean>
+</beans>

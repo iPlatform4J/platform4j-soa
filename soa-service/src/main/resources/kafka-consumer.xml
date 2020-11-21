@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="kafkaConsumerOptions" class="com.platform4j.soa.service.kafka.KafkaConsumerOptions">
+        <property name="zkSessionTimeout" value="5000"/>
+        <property name="zkConnectionTimeout" value="6000"/>
+        <property name="zkSyncTime" value="2000"/>
+        <property name="autoCommitInterval" value="1000"/>
+        <property name="autoOffsetReset" value="smallest"/>
+        <property name="rebalanceBackOff" value="1200"/>
+        <property name="rebalanceMaxRetries" value="50"/>
+    </bean>
+
+    <bean id="kafkaConsumer" class="com.platform4j.soa.service.kafka.KafkaConsumer" destroy-method="shutdown">
+        <constructor-arg name="a_zookeeper" value=""></constructor-arg>
+        <constructor-arg name="a_groupId" value=""></constructor-arg>
+        <constructor-arg name="a_topic" value=""></constructor-arg>
+    </bean>
+</beans>
