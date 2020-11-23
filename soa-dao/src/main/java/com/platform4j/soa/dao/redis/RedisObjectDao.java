@@ -288,4 +288,19 @@ public interface RedisObjectDao {
     public Long sadd(final String key, final List<String> list);
 
     public Set<String> smembers(final String key);
+
+    /**
+     * 尝试获取redis锁
+     * @param key
+     * @param value
+     * @return
+     */
+    public boolean tryDistributedLock(String key, String value, long time);
+
+    /**
+     * 删除redis锁
+     * @param key
+     * @return
+     */
+    public boolean removeDistributedLock(String key, String value);
 }

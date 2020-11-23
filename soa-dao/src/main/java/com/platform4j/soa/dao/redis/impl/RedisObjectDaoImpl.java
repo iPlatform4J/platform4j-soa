@@ -12,6 +12,10 @@ import java.util.*;
 public class RedisObjectDaoImpl implements RedisObjectDao {
     private static ObjectMapper jsonMapper = JacksonJsonMapperUtil.getMapper();
 
+    private static final String LOCK_SUCCESS = "OK";
+    private static final String SET_IF_NOT_EXIST = "NX";
+    private static final String SET_WITH_EXPIRE_TIME = "PX";
+    private static final Long RELEASE_SUCCESS = 1L;
 
     // 数据源
     private ShardedJedisSentinelPool shardedJedisPool;
@@ -708,5 +712,36 @@ public class RedisObjectDaoImpl implements RedisObjectDao {
      */
     public <K, V> Pair<K, Object> makePair(K key, Object value) {
         return new Pair<K, Object>(key, value);
+    }
+
+    public boolean tryDistributedLock(final String key, final String value, final long time){
+        return new Executor<Boolean>(shardedJedisPool) {
+
+            @Override
+            Boolean execute() {
+                String result = jedis.set(key, value, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, time);
+
+                if (LOCK_SUCCESS.equals(result)) {
+                    return true;
+                }
+                return false;
+            }
+        }.getResult();
+    }
+
+    public boolean removeDistributedLock(final String key, final String value){
+        return new Executor<Boolean>(shardedJedisPool) {
+
+            @Override
+            Boolean execute() {
+                String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+
+                Object result = jedis.getShard(key).eval(script, Collections.singletonList(key), Collections.singletonList(value));
+                if (RELEASE_SUCCESS.equals(result)) {
+                    return true;
+                }
+                return false;
+            }
+        }.getResult();
     }
 }
