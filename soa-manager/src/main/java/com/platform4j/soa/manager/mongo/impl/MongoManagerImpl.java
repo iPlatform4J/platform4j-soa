@@ -1,4 +1,4 @@
-package com.platform4j.soa.manager.impl;
+package com.platform4j.soa.manager.mongo.impl;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.platform4j.soa.dao.mongo.impl.MongoDaoImpl;

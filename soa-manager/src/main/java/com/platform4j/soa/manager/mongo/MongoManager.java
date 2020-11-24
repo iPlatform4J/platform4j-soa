@@ -1,4 +1,4 @@
-package com.platform4j.soa.manager;
+package com.platform4j.soa.manager.mongo;
 
 import com.platform4j.soa.dao.mongo.domain.HelloMongo;
 

@@ -32,6 +32,6 @@
     </tx:advice>
 
     <aop:config>
-        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.platform4j.soa.manager.impl.*Manager.*(..))" order="0"/>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.platform4j.soa.manager.mongo.impl.*Manager.*(..))" order="0"/>
     </aop:config>
 </beans>
